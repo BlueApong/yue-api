@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.apong.yueapi.platform.mapper.ApiInfoMapper">
+
+    <resultMap id="BaseResultMap" type="pers.apong.yueapi.platform.model.domain.ApiInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="calledKey" column="calledKey" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="url" column="url" jdbcType="VARCHAR"/>
+            <result property="gatewayUrl" column="gatewayUrl" jdbcType="VARCHAR"/>
+            <result property="method" column="method" jdbcType="VARCHAR"/>
+            <result property="requestParams" column="requestHeader" jdbcType="VARCHAR"/>
+            <result property="responseParams" column="responseParams" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,calledKey,name,description,
+        url,gatewayUrl,method,
+        requestParams,responseParams,status,userId,
+        createTime,updateTime,isDelete
+    </sql>
+    <select id="listUserAppliedApi" resultType="pers.apong.yueapi.platform.model.vo.UserAppliedApiVO">
+        select apiInfoId id, name, description, leftNum, totalNum
+        from (select apiInfoId, leftNum, totalNum
+              from user_api_invoke
+              where userId = #{userId} and isDelete = 0 limit #{current},#{pageSize}) uai
+                 left join api_info ai on uai.apiInfoId = ai.id
+        ${ew.customSqlSegment} and ai.isDelete = 0
+    </select>
+</mapper>

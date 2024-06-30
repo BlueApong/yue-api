@@ -1,0 +1,30 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: yue-gateway
+  cloud:
+    gateway:
+      routes:
+        # 代理拦截开放接口
+        - id: proxyAPI
+          uri: http://localhost:8123
+          predicates:
+            - Path=/api/**
+    nacos:
+      discovery:
+        server-addr: http://192.168.59.128:8848
+        username: nacos
+        password: 123
+
+dubbo:
+  application:
+    name: yueapi-gateway
+    logger: slf4j
+    qos-port: 33333
+  registry:
+    address: nacos://192.168.59.128:8848?username=nacos&password=123
+
+logging:
+  level:
+    org.springframework.cloud.gateway: trace

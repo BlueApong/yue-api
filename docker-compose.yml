@@ -1,0 +1,39 @@
+version: '3'
+services:
+  platform-service:
+    container_name: platform-service
+    build:
+      context: ./platform-service
+      dockerfile: Dockerfile
+    ports:
+      - "7529:7529"
+    networks:
+      - yueapi
+
+  yue-gateway:
+    container_name: yue-gateway
+    build: # 服务的 Docker 构建文件位置
+      context: ./yue-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    networks:
+      - yueapi
+    depends_on: # 本服务依赖的服务，控制启动先后顺序
+      - platform-service
+
+  api-provider-service:
+    container_name: api-provider-service
+    build:
+      context: ./api-provider-service
+      dockerfile: Dockerfile
+    ports:
+      - "8123:8123"
+    networks:
+      - yueapi
+    depends_on:
+      - yue-gateway
+
+# 网络，不定义的话就是默认网络
+networks:
+  yueapi:

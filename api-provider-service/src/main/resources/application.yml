@@ -1,0 +1,20 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+
+knife4j:
+  enable: true
+  openapi:
+    title: YueAPI 接口
+    description: "YueAPI 接口"
+    concat: apong
+    url: https://github.com/blueapong
+    version: v1.0.0
+    group:
+      default:
+        group-name: default
+        api-rule: package
+        api-rule-resources:
+          - pers.apong.yueapi.apiprovider.controller
